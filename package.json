@@ -1,6 +1,6 @@
 {
 	"name": "typed-dva",
-	"version": "1.3.0-beta1-11",
+	"version": "1.3.0-beta1-14",
 	"description": "Unofficial Dva framework rewritten using Typescript.",
 	"repository": {
 		"type": "git",

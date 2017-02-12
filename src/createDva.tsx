@@ -21,19 +21,137 @@ import Plugin from './plugin';
 
 const SEP = '/';
 
+import {
+	Reducer,
+	Action,
+	ReducersMapObject,
+	Dispatch,
+	MiddlewareAPI,
+	StoreEnhancer
+} from 'redux';
+
+export interface onActionFunc {
+	(api: MiddlewareAPI<any>): void;
+}
+
+export interface ReducerEnhancer {
+	(reducer: Reducer<any>): void
+}
+
+export interface Hooks {
+	onError?: (e: Error, dispatch: Dispatch<any>) => void;
+	onAction?: onActionFunc | onActionFunc[];
+	onStateChange?: () => void;
+	onReducer?: ReducerEnhancer;
+	onEffect?: () => void;
+	onHmr?: () => void;
+	extraReducers?: ReducersMapObject;
+	extraEnhancers?: StoreEnhancer<any>[];
+}
+
+export type DvaOption = Hooks & {
+	initialState?: Object;
+	history?: Object;
+}
+
+export interface EffectsCommandMap {
+	put: <A extends Action>(action: A) => any;
+	call: Function;
+	select: Function;
+	take: Function;
+	cancel: Function;
+	[key: string]: any;
+}
+
+export type Effect = (action: Action, effects: EffectsCommandMap) => void;
+export type EffectType = 'takeEvery' | 'takeLatest' | 'watcher' | 'throttle';
+export type EffectWithType = [Effect, { type: EffectType }];
+export type Subscription = (api: SubscriptionAPI, done: Function) => void;
+export type ReducersMapObjectWithEnhancer = [ReducersMapObject, ReducerEnhancer];
+
+export interface EffectsMapObject {
+	[key: string]: Effect | EffectWithType;
+}
+
+export interface SubscriptionAPI {
+	history: History;
+	dispatch: Dispatch<any>;
+}
+
+export interface SubscriptionsMapObject {
+	[key: string]: Subscription;
+}
+
+export interface Model {
+	namespace: string,
+	state?: any,
+	reducers?: ReducersMapObject | ReducersMapObjectWithEnhancer,
+	effects?: EffectsMapObject,
+	subscriptions?: SubscriptionsMapObject,
+}
+
+export interface RouterAPI {
+	history: History;
+	app: DvaInstance;
+}
+
+export interface Router {
+	(api?: RouterAPI): JSX.Element | Object;
+}
+
+export interface DvaInstance {
+	/**
+	 * Register an object of hooks on the application.
+	 *
+	 * @param hooks
+	 */
+	use: (hooks: Hooks) => void,
+
+	/**
+	 * Register a model.
+	 *
+	 * @param model
+	 */
+	model: (model: Model) => void,
+
+	/**
+	 * Unregister a model.
+	 *
+	 * @param namespace
+	 */
+	unmodel: (namespace: string) => void,
+
+	/**
+	 * Config router. Takes a function with arguments { history, dispatch },
+	 * and expects router config. It use the same api as react-router,
+	 * return jsx elements or JavaScript Object for dynamic routing.
+	 *
+	 * @param router
+	 */
+	router: (router: Router) => void,
+
+	/**
+	 * Start the application. Selector is optional. If no selector
+	 * arguments, it will return a function that return JSX elements.
+	 *
+	 * @param selector
+	 */
+	start: (selector?: HTMLElement | string) => any,
+}
+
 export default function createDva(createOpts) {
 	const {
-    mobile,
+    	mobile,
 		initialReducer,
 		defaultHistory,
 		routerMiddleware,
 		setupHistory,
-  } = createOpts;
+  	} = createOpts;
 
 	/**
 	 * Create a dva instance.
 	 */
-	return function dva(hooks: any = {}) {
+	return function dva(hooks: DvaOption = {}): DvaInstance {
 		// history and initialState does not pass to plugin
 		const history = hooks.history || defaultHistory;
 		const initialState = hooks.initialState || {};
@@ -56,6 +174,7 @@ export default function createDva(createOpts) {
 			model,
 			router,
 			start,
+			unmodel: null,
 		};
 		return app;
 
@@ -67,7 +186,7 @@ export default function createDva(createOpts) {
 		 *
 		 * @param hooks
 		 */
-		function use(hooks) {
+		function use(hooks: Hooks) {
 			plugin.use(hooks);
 		}
 
@@ -76,7 +195,7 @@ export default function createDva(createOpts) {
 		 *
 		 * @param model
 		 */
-		function model(model) {
+		function model(model: Model) {
 			this._models.push(checkModel(model, mobile));
 		}
 
@@ -137,7 +256,7 @@ export default function createDva(createOpts) {
 		 *
 		 * @param router
 		 */
-		function router(router) {
+		function router(router: Router) {
 			invariant(typeof router === 'function', 'app.router: router should be function');
 			this._router = router;
 		}
@@ -148,7 +267,7 @@ export default function createDva(createOpts) {
 		 *
 		 * @param container selector | HTMLElement
 		 */
-		function start(container) {
+		function start(container?: Element | string) {
 			// support selector
 			if (typeof container === 'string') {
 				container = document.querySelector(container);
