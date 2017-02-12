@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { connect } from '../../index';
+import { connect } from 'react-redux';
 const styles = require('./HomePage.css');
 
 function HomePage(props) {

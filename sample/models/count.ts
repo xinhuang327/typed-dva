@@ -1,5 +1,6 @@
 // import { routerRedux, Router, RouteProps } from '../../router';
-import { routerRedux, Router } from '../../router';
+import { Router } from 'react-router';
+import * as routerRedux from 'react-router-redux'
 
 const delay = (timeout) => new Promise(resolve => setTimeout(resolve, timeout));
 

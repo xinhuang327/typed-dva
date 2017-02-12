@@ -1,7 +1,7 @@
 import * as isPlainObject from 'is-plain-object';
 import * as invariant from 'invariant';
 
-class Plugin {
+export default class Plugin {
 
 	hooks: any
 
@@ -71,5 +71,3 @@ class Plugin {
 		}
 	}
 }
-
-export default Plugin;

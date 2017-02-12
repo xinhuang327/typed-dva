@@ -1,8 +1,7 @@
-import createDva from "./src"
+import createDva from "./src/index"
 
 export default createDva
 export { connect } from "react-redux"
-// export connect
 
 // Object.defineProperty(exports, "__esModule", {
 // 	value: true

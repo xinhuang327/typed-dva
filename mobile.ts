@@ -1,5 +1,4 @@
 import mobile from "./src/mobile"
-// import { connect } from "react-redux"
 
 export default mobile
 export { connect } from "react-redux"

@@ -4,5 +4,5 @@ import * as RouterRedux from 'react-router-redux'
 let toExport = { ...ReactRouter, routerRedux: RouterRedux }
 export = toExport
 
-// module.exports = require('react-router');
-// module.exports.routerRedux = require('react-router-redux');
+// // module.exports = require('react-router');
+// // module.exports.routerRedux = require('react-router-redux');
