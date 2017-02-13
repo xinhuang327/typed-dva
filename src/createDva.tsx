@@ -15,7 +15,7 @@ import {
 	takeLatestHelper as takeLatest,
 	throttleHelper as throttle,
 } from 'redux-saga/lib/internal/sagaHelpers';
-import isFunction from 'lodash.isfunction';
+import isFunction = require('lodash.isfunction');
 import handleActions from './handleActions';
 import Plugin from './plugin';
 

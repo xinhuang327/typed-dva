@@ -1,9 +1,11 @@
 import * as isPlainObject from 'is-plain-object';
 import * as invariant from 'invariant';
 
+import { DvaOption } from "./createDva"
+
 export default class Plugin {
 
-	hooks: any
+	hooks: { [key: string]: any }
 
 	constructor() {
 		this.hooks = {
@@ -18,7 +20,7 @@ export default class Plugin {
 		};
 	}
 
-	use(plugin) {
+	use(plugin: DvaOption) {
 		invariant(isPlainObject(plugin), 'plugin.use: plugin should be plain object');
 		const hooks = this.hooks;
 		for (const key in plugin) {
@@ -33,7 +35,7 @@ export default class Plugin {
 		}
 	}
 
-	apply(key, defaultHandler?: any) {
+	apply(key: string, defaultHandler?: Function) {
 		const hooks = this.hooks;
 		const validApplyHooks = ['onError', 'onHmr'];
 		invariant(validApplyHooks.indexOf(key) > -1, `plugin.apply: hook ${key} cannot be applied`);
@@ -50,7 +52,7 @@ export default class Plugin {
 		};
 	}
 
-	get(key) {
+	get(key: string) {
 		const hooks = this.hooks;
 		invariant(key in hooks, `plugin.get: hook ${key} cannot be got`);
 		if (key === 'extraReducers') {
