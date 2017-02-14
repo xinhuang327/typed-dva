@@ -1,6 +1,6 @@
 {
 	"name": "typed-dva",
-	"version": "1.3.0-beta1-14",
+	"version": "1.3.0-beta1-16",
 	"description": "Unofficial Dva framework rewritten using Typescript.",
 	"repository": {
 		"type": "git",
@@ -39,6 +39,7 @@
 		"instrument": false
 	},
 	"scripts": {
+		"publishnpm": "npm run buildnpm && npm publish lib",
 		"testonly": "cd lib/ && cross-env NODE_ENV=test nyc mocha --no-timeouts",
 		"test": "npm run buildnpm && cp -R test lib/test/ && cd lib/ && cross-env NODE_ENV=test nyc mocha --no-timeouts",
 		"buildnpm": "rm -rf lib && tsc -d --outDir lib && babel lib --out-dir lib && cp package.json lib/ && rm -rf lib/sample",

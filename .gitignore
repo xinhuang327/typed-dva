@@ -6,3 +6,4 @@ lib/
 
 yarn.lock
 .nyc_output/
+src/npm-debug.log

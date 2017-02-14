@@ -23,12 +23,17 @@ const SEP = '/';
 
 import {
 	Reducer,
-	Action,
+	Action as ReduxAction,
 	ReducersMapObject,
 	Dispatch,
 	MiddlewareAPI,
 	StoreEnhancer
 } from 'redux';
+import { History } from 'history'
+
+export interface Action extends ReduxAction {
+	[key: string]: any
+}
 
 export interface onActionFunc {
 	(api: MiddlewareAPI<any>): void;
