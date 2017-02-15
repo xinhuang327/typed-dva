@@ -1,5 +1,5 @@
 # Typed-Dva
-Evoving Dva's gene, in a Typescript way.
+Evolve Dva's gene, in a Typescript way.
 
 # Upstream Dva commit: 
 * 1.3.0-beta1
