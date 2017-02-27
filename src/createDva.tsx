@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { AppContainer } from 'react-hot-loader'
+declare var module: any
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import createSagaMiddleware from 'redux-saga/lib/internal/middleware';
@@ -396,6 +398,12 @@ export default function createDva(createOpts) {
 			if (container) {
 				render(container, store, this, this._router);
 				plugin.apply('onHmr')(render.bind(this, container, store, this));
+				// Adrian Huang: return render function for hot load 
+				return render.bind(this, container, store, this)
+				// Usage: 
+				// if (module.hot) {
+				// 	module.hot.accept('./router', ()=>{renderFunc(router)})
+				// }
 			} else {
 				return getProvider(store, this, this._router);
 			}
@@ -406,9 +414,11 @@ export default function createDva(createOpts) {
 
 		function getProvider(store, app, router) {
 			return extraProps => (
-				<Provider store={store}>
-					{router({ app, history: app._history, ...extraProps })}
-				</Provider>
+				<AppContainer>
+					<Provider store={store}>
+						{router({ app, history: app._history, ...extraProps })}
+					</Provider>
+				</AppContainer>
 			);
 		}
 

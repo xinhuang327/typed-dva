@@ -1,6 +1,6 @@
 {
 	"name": "typed-dva",
-	"version": "1.3.0-beta1-18",
+	"version": "1.3.0-beta1-20",
 	"description": "Unofficial Dva framework rewritten using Typescript.",
 	"repository": {
 		"type": "git",
@@ -42,9 +42,10 @@
 		"publishnpm": "npm run buildnpm && npm publish lib",
 		"testonly": "cd lib/ && cross-env NODE_ENV=test nyc mocha --no-timeouts",
 		"test": "npm run buildnpm && cp -R test lib/test/ && cd lib/ && cross-env NODE_ENV=test nyc mocha --no-timeouts",
-		"buildnpm": "rm -rf lib && tsc -d --outDir lib && babel lib --out-dir lib && cp package.json lib/ && rm -rf lib/sample",
+		"buildnpm": "npm run patchfiles && rm -rf lib && tsc -d --outDir lib && babel lib --out-dir lib && cp package.json lib/ && rm -rf lib/sample",
 		"start": "webpack-dev-server",
-		"build": "webpack --config webpack.config.prod.js --optimize-minimize --define process.env.NODE_ENV='\"production\"'"
+		"build": "webpack --config webpack.config.prod.js --optimize-minimize --define process.env.NODE_ENV='\"production\"'",
+		"patchfiles": "sed -i .bak 's/interface WeakMap<K, V>/interface WeakMap<K extends object, V>/g' ./node_modules/@types/lodash/index.d.ts"
 	},
 	"devDependencies": {
 		"babel-core": "^6.22.1",
@@ -63,7 +64,7 @@
 		"jsdom": "^9.11.0",
 		"mocha": "^3.2.0",
 		"nyc": "^10.1.2",
-		"react-hot-loader": "^1.3.1",
+		"react-hot-loader": "next",
 		"style-loader": "^0.13.1",
 		"ts-loader": "^2.0.0",
 		"typescript": "^2.1.5",
@@ -78,6 +79,7 @@
 		"@types/lodash.isfunction": "^3.0.1",
 		"@types/react": "^15.0.8",
 		"@types/react-dom": "^0.14.23",
+		"@types/react-hot-loader": "^3.0.1",
 		"@types/react-redux": "^4.4.36",
 		"@types/react-router": "^2.8.1",
 		"@types/react-router-redux": "^4.0.5",
