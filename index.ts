@@ -5,7 +5,7 @@ export default createDva
 export { connect } from "react-redux"
 
 export {
-	Hooks, DvaOption, Model
+	Hooks, DvaOption, Model, Action, EffectsCommandMap
 } from "./src/createDva"
 
 // Object.defineProperty(exports, "__esModule", {

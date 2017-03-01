@@ -92,9 +92,9 @@ export interface SubscriptionsMapObject {
 export interface Model {
 	namespace: string,
 	state?: any,
-	reducers?: ReducersMapObject | ReducersMapObjectWithEnhancer,
-	effects?: EffectsMapObject,
-	subscriptions?: SubscriptionsMapObject,
+	reducers?: ReducersMapObject | ReducersMapObjectWithEnhancer | Object,
+	effects?: EffectsMapObject | Object,
+	subscriptions?: SubscriptionsMapObject | Object,
 }
 
 export interface RouterAPI {
@@ -444,22 +444,25 @@ export default function createDva(createOpts) {
 				mobile || namespace !== 'routing',
 				'app.model: namespace should not be routing, it\'s used by react-redux-router',
 			);
-			invariant(
-				!model.subscriptions || isPlainObject(model.subscriptions),
-				'app.model: subscriptions should be Object',
-			);
-			invariant(
-				!reducers || isPlainObject(reducers) || Array.isArray(reducers),
-				'app.model: reducers should be Object or array',
-			);
-			invariant(
-				!Array.isArray(reducers) || (isPlainObject(reducers[0]) && typeof reducers[1] === 'function'),
-				'app.model: reducers with array should be app.model({ reducers: [object, function] })',
-			);
-			invariant(
-				!effects || isPlainObject(effects),
-				'app.model: effects should be Object',
-			);
+
+			// Adrian Huang: remove checking temporarily:
+
+			// invariant(
+			// 	!model.subscriptions || isPlainObject(model.subscriptions),
+			// 	'app.model: subscriptions should be Object',
+			// );
+			// invariant(
+			// 	!reducers || isPlainObject(reducers) || Array.isArray(reducers),
+			// 	'app.model: reducers should be Object or array',
+			// );
+			// invariant(
+			// 	!Array.isArray(reducers) || (isPlainObject(reducers[0]) && typeof reducers[1] === 'function'),
+			// 	'app.model: reducers with array should be app.model({ reducers: [object, function] })',
+			// );
+			// invariant(
+			// 	!effects || isPlainObject(effects),
+			// 	'app.model: effects should be Object',
+			// );
 
 			function applyNamespace(type) {
 				function getNamespacedReducers(reducers) {
