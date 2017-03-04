@@ -4,6 +4,7 @@ declare var module: any
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
 import createSagaMiddleware from 'redux-saga/lib/internal/middleware';
+import { Monitor } from 'redux-saga';
 import * as sagaEffects from 'redux-saga/effects';
 import * as isPlainObject from 'is-plain-object';
 import * as invariant from 'invariant';
@@ -59,6 +60,7 @@ export interface Hooks {
 export type DvaOption = Hooks & {
 	initialState?: Object;
 	history?: Object;
+	sagaMonitor?: Monitor;
 }
 
 export interface EffectsCommandMap {
@@ -162,8 +164,10 @@ export default function createDva(createOpts) {
 		// history and initialState does not pass to plugin
 		const history = hooks.history || defaultHistory;
 		const initialState = hooks.initialState || {};
+		const sagaMonitor = hooks.sagaMonitor
 		delete hooks.history;
 		delete hooks.initialState;
+		delete hooks.sagaMonitor;
 
 		const plugin = new Plugin();
 		plugin.use(hooks);
@@ -329,7 +333,7 @@ export default function createDva(createOpts) {
 			// create store
 			const extraMiddlewares = plugin.get('onAction');
 			const reducerEnhancer = plugin.get('onReducer');
-			const sagaMiddleware = createSagaMiddleware();
+			const sagaMiddleware = createSagaMiddleware({ sagaMonitor: sagaMonitor });
 			let middlewares = [
 				sagaMiddleware,
 				...flatten(extraMiddlewares),
@@ -607,10 +611,11 @@ export default function createDva(createOpts) {
 			function put(action) {
 				const { type } = action;
 				invariant(type, 'dispatch: action should be a plain Object with type');
-				warning(
-					type.indexOf(`${model.namespace}${SEP}`) !== 0,
-					`effects.put: ${type} should not be prefixed with namespace ${model.namespace}`,
-				);
+				// Adrian Huang: remove this warning, can use prefixed reducer type
+				// warning(
+				// 	type.indexOf(`${model.namespace}${SEP}`) !== 0,
+				// 	`effects.put: ${type} should not be prefixed with namespace ${model.namespace}`,
+				// );
 				return sagaEffects.put({ ...action, type: prefixType(type, model) });
 			}
 			return { ...sagaEffects, put };
