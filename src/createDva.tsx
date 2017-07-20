@@ -451,22 +451,22 @@ export default function createDva(createOpts) {
 
 			// Adrian Huang: remove checking temporarily:
 
-			// invariant(
-			// 	!model.subscriptions || isPlainObject(model.subscriptions),
-			// 	'app.model: subscriptions should be Object',
-			// );
-			// invariant(
-			// 	!reducers || isPlainObject(reducers) || Array.isArray(reducers),
-			// 	'app.model: reducers should be Object or array',
-			// );
-			// invariant(
-			// 	!Array.isArray(reducers) || (isPlainObject(reducers[0]) && typeof reducers[1] === 'function'),
-			// 	'app.model: reducers with array should be app.model({ reducers: [object, function] })',
-			// );
-			// invariant(
-			// 	!effects || isPlainObject(effects),
-			// 	'app.model: effects should be Object',
-			// );
+			invariant(
+				!model.subscriptions || isPlainObject(model.subscriptions),
+				'app.model: subscriptions should be Object',
+			);
+			invariant(
+				!reducers || isPlainObject(reducers) || Array.isArray(reducers),
+				'app.model: reducers should be Object or array',
+			);
+			invariant(
+				!Array.isArray(reducers) || (isPlainObject(reducers[0]) && typeof reducers[1] === 'function'),
+				'app.model: reducers with array should be app.model({ reducers: [object, function] })',
+			);
+			invariant(
+				!effects || isPlainObject(effects),
+				'app.model: effects should be Object',
+			);
 
 			function applyNamespace(type) {
 				function getNamespacedReducers(reducers) {
