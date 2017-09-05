@@ -417,13 +417,21 @@ export default function createDva(createOpts) {
 		// Helpers
 
 		function getProvider(store, app, router) {
-			return extraProps => (
-				<AppContainer>
+			if (mobile) {
+				return extraProps => (
 					<Provider store={store}>
 						{router({ app, history: app._history, ...extraProps })}
 					</Provider>
-				</AppContainer>
-			);
+				);
+			} else {
+				return extraProps => (
+					<AppContainer>
+						<Provider store={store}>
+							{router({ app, history: app._history, ...extraProps })}
+						</Provider>
+					</AppContainer>
+				);
+			}
 		}
 
 		function render(container, store, app, router) {
