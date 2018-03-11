@@ -3,7 +3,8 @@ import { AppContainer } from 'react-hot-loader'
 declare var module: any
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose, combineReducers } from 'redux';
-import createSagaMiddleware from 'redux-saga/lib/internal/middleware';
+import { composeWithDevTools } from 'remote-redux-devtools';
+import createSagaMiddleware from 'redux-saga/es/internal/middleware';
 import { Monitor } from 'redux-saga';
 import * as sagaEffects from 'redux-saga/effects';
 import * as isPlainObject from 'is-plain-object';
@@ -11,13 +12,20 @@ import * as invariant from 'invariant';
 import * as warning from 'warning';
 import * as flatten from 'flatten';
 // import window from 'global/window';
-let windowAny = window as any
+let windowAny: any
+try {
+	windowAny = window as any
+} catch (ex) {
+}
+if (!windowAny) {
+	windowAny = {}
+}
 // import document from 'global/document';
 import {
 	takeEveryHelper as takeEvery,
 	takeLatestHelper as takeLatest,
 	throttleHelper as throttle,
-} from 'redux-saga/lib/internal/sagaHelpers';
+} from 'redux-saga/es/internal/sagaHelpers';
 import isFunction = require('lodash.isfunction');
 import handleActions from './handleActions';
 import Plugin from './plugin';
@@ -150,12 +158,12 @@ export interface DvaInstance {
 
 export default function createDva(createOpts) {
 	const {
-    	mobile,
+		mobile,
 		initialReducer,
 		defaultHistory,
 		routerMiddleware,
 		setupHistory,
-  	} = createOpts;
+	} = createOpts;
 
 	/**
 	 * Create a dva instance.
